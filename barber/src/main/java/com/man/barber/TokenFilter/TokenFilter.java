@@ -42,7 +42,6 @@ public class TokenFilter extends GenericFilterBean {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-
         // user id
         Long principal = decoded.getClaim("principal").asLong();
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, "(protected)", null);

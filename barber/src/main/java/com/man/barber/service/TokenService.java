@@ -5,21 +5,23 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.man.barber.entity.MsUser;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class TokenService {
 
-    private String secret = "Backend2022";
-
-    private String Issuer = "ManB3@2540";
+    @Value("${app.token.secret}")
+    private String secret ;
+    @Value("${app.token.issuer}")
+    private String issuer;
 
 
     public String crecte(MsUser user) {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         String token = JWT.create()
                 .withClaim("principal",user.getId())
-                .withIssuer(Issuer)
+                .withIssuer(issuer)
                 .sign(algorithm);
                 return token;
     }
@@ -28,7 +30,7 @@ public class TokenService {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         try {
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer(Issuer)
+                    .withIssuer(issuer)
                     .build();
 
             return verifier.verify(token);

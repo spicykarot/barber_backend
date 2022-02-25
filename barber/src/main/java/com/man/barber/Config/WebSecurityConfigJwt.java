@@ -2,7 +2,6 @@ package com.man.barber.Config;
 
 import com.man.barber.TokenFilter.TokenFilterConfiguerer;
 import com.man.barber.service.TokenService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,13 +17,14 @@ import java.util.Collections;
 
 @EnableWebSecurity
 @Configuration
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfigJwt extends WebSecurityConfigurerAdapter {
 
+    private final TokenService tokenService;
+    public WebSecurityConfigJwt(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
-    @Autowired
-    private TokenService tokenService;
-
-    private String [] PUBLIC = {""};
+    private  final  String [] PUBLIC = {"/apiUser/login"};
 
     @Bean
     BCryptPasswordEncoder passwordEncoder(){

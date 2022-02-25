@@ -1,0 +1,4 @@
+app:
+  token:
+    secret: SECRET_JWT_SECRET
+    issuer: BackendService

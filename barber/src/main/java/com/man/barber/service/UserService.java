@@ -1,25 +1,17 @@
 package com.man.barber.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.man.barber.model.DTOloginresponse;
 import com.man.barber.model.DTOrequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import com.man.barber.entity.MsBarberShop;
 import com.man.barber.entity.MsUser;
-import com.man.barber.entity.TrBarberTeam;
 import com.man.barber.model.UserModel;
-import com.man.barber.repository.BarberShopRepository;
 import com.man.barber.repository.UserRepository;
 
 @Service
@@ -27,10 +19,14 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private TokenService tokenService;
+
+	private final TokenService tokenService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+
+	public UserService(TokenService tokenService) {
+		this.tokenService = tokenService;
+	}
 
 	public List<MsUser> findUserAll() {
 		return userRepository.findAll();
