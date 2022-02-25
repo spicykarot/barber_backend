@@ -2,11 +2,16 @@ package com.man.barber.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.man.barber.model.DTOloginresponse;
+import com.man.barber.model.DTOrequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -22,6 +27,10 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private TokenService tokenService;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	public List<MsUser> findUserAll() {
 		return userRepository.findAll();
@@ -114,4 +123,36 @@ public class UserService {
 		}
 		return result;
 	}
+
+	public MsUser save(UserModel userModel) {
+		MsUser user = new MsUser();
+		user.setTitle(userModel.getTitle());
+		user.setFirstName(userModel.getFirstName());
+		user.setLastName(userModel.getLastName());
+		user.setEmail(userModel.getEmail());
+		user.setPassword(passwordEncoder.encode(userModel.getPassword()));
+		user.setTel(userModel.getTel());
+		user.setAddress(userModel.getAddress());
+		user.setUser_type(userModel.getUser_type());
+		return userRepository.save(user);
+	}
+
+	public boolean check_encode(String rawPassword, String encodedPassword){
+		return passwordEncoder.matches(rawPassword,encodedPassword);
+	}
+
+	public DTOloginresponse login(DTOrequest request){
+		Optional<MsUser> optional = userRepository.findByEmail(request.getEmail());
+		if(optional.isEmpty()){
+			//throw
+		}
+		MsUser user = optional.get();
+		if(!check_encode(request.getPassword(), user.getPassword())){
+			//throw
+		}
+		DTOloginresponse response = new DTOloginresponse();
+		response.setToken(tokenService.crecte(user));
+		return response;
+	}
+
 }

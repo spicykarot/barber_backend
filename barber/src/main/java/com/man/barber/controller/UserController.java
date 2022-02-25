@@ -1,7 +1,11 @@
 package com.man.barber.controller;
 
+import com.man.barber.entity.MsUser;
+import com.man.barber.model.DTOloginresponse;
+import com.man.barber.model.DTOrequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,4 +42,15 @@ public class UserController {
         return userService.updateUser(mainTimesheetModel);
     }
 
+	@PostMapping("/login")
+	public ResponseEntity<DTOloginresponse>  login(@RequestBody DTOrequest request){
+		DTOloginresponse response = userService.login(request);
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/registra")
+	public ResponseEntity<MsUser>  login(@RequestBody UserModel request){
+		MsUser response = userService.save(request);
+		return ResponseEntity.ok(response);
+	}
 }
